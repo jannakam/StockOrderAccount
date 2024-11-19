@@ -21,6 +21,9 @@ public class StockEntity {
     @Column
     private String item;
 
+    @Column
+    private String status = "default";
+
     public Long getId() {
         return id;
     }
@@ -43,5 +46,13 @@ public class StockEntity {
 
     public void setItem(String item) {
         this.item = item;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

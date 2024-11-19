@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.bo.CreateOrderRequest;
 import com.example.demo.bo.OrderResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ public class OrderController {
 
 
     @PostMapping("/orders")
+    @CircuitBreaker(name = "orderMS", fallbackMethod = "fallbackMethod")
     public OrderResponse doOrder(@RequestBody CreateOrderRequest customerOrder) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -37,6 +39,12 @@ public class OrderController {
 
         System.out.println("Order Status::" + orderStatus);
 
+        return orderStatus;
+    }
+
+    public OrderResponse fallbackMethod(Throwable throwable) {
+        OrderResponse orderStatus = new OrderResponse();
+        orderStatus.setStatus("Called Fallback Method");
         return orderStatus;
     }
 }
